@@ -17,28 +17,31 @@ enum Coffee {
 struct Person {
     var name: String
     var money: Int
-
-    mutating func buySomething(amount: Int) {
+    
+    mutating func buySomething(amount: Int) -> Bool {
         let balance = self.money - amount
 
         if balance >= 0 {
             self.money -= amount
             print("\(name)고객님의 주문이 완료되었습니다.")
             print("고객님의 남은 잔고는 \(money)입니다.")
+            return true
         }
         // 잔액부족
         else {
             print("\(name)고객님, 잔액이 \(balance)원만큼 부족합니다.")
-            print("돈을 더 벌어오세요!")
+            print("돈을 더 벌어오세요!\n")
+            return false
         }
     }
 }
 
+
 struct CoffeeShop{
+    var customer: Person = Person(name: "-", money: 0)
     var sales: Int = 0
     var barista: Person
     var pickUpTable: Bool
-    
     var menu: [Coffee: Int] = [.americano: 3500, .cafeLatte: 4000, .vanillaLatte: 4500, .brunchSet: 10500]
     
     
@@ -65,9 +68,13 @@ struct CoffeeShop{
             return false
         }
         
-        print("가격은 \(payment)원입니다.")
-        self.sales += payment
-        
+        if self.customer.buySomething(amount: payment) {
+            print("가격은 \(payment)원입니다.")
+            self.sales += payment
+        }
+        else {
+            return false
+        }
         return true
     }
     
@@ -92,12 +99,16 @@ struct CoffeeShop{
             self.serveCoffee()
         }
         else {
-            print("\n주문하신 음료를 픽업대에서 가져가 주세요.")
+            print("\n\(customer.name)님의 커피가 준비되었습니다. 픽업대에서 가져가주세요.")
             self.pickUpTable = true
         }
     }
 }
 
 var misterLee: Person = Person(name: "misterLee", money: 10000)
-var misterKim: Person = Person(name: "misterKim", money: 2000)
+var missKim: Person = Person(name: "missKim", money: 5000)
 var mustabucks: CoffeeShop = CoffeeShop(sales: 100000, barista: misterLee, pickUpTable: true)
+
+mustabucks.customer = missKim
+mustabucks.order(coffee: .brunchSet)
+mustabucks.order(coffee: .americano)
