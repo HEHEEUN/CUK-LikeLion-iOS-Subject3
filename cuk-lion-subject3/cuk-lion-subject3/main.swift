@@ -33,7 +33,7 @@ struct Person {
 }
 
 struct CoffeeShop{
-    var customer: Person = Person(name: "-", money: 0) // ___고객의 이름을 알 수 없음. 해당 고객의 이름을 "-"로 설정해둔 것이 미흡.
+    var customer: Person = Person(name: "비회원", money: 0) // ___고객의 이름을 알 수 없음. 해당 고객의 이름을 "-"로 설정해둔 것이 미흡.
     var sales: Int = 0
     var menu: [Coffee: Int] = [.americano: 3500, .cafeLatte: 4000, .vanillaLatte: 4500, .brunchSet: 10500]
     var pickUpTable = [true, false, false]
@@ -53,7 +53,7 @@ struct CoffeeShop{
     
     // 고객 주문 받기
     private mutating func welcomeCustomers(coffee: Coffee) -> Bool {
-        print("\(barista.name)입니다. \(coffee)주문받았습니다.")
+        print("\(self.barista.name)입니다. \(coffee)주문받았습니다.")
         
         // 주문 불가능한 메뉴일 경우 예외처리
         guard let payment = self.menu[coffee] else {
@@ -82,20 +82,22 @@ struct CoffeeShop{
     }
     
     private mutating func serveCoffee() {
+
         for i in 0...2 {
-            if pickUpTable[i] == false{
+            if self.pickUpTable[i] == false{
                 print("\(i)번 테이블에서 제공해드리겠습니다.")
-                pickUpTable[i] = true
+                self.pickUpTable[i] = true
                 break
             }
-            if (i == 2) && (pickUpTable[2] == true){
+            else if (i == 2) && (self.pickUpTable[2] == true){
                 // 픽업대 청소 후 다시 제공
                 self.cleanPickUpTable()
                 print("0번 테이블에서 제공해드리겠습니다.")
-                pickUpTable[0] = true
+                self.pickUpTable[0] = true
             }
         }
-        print("\n\(customer.name)님의 커피가 준비되었습니다. 픽업대에서 가져가주세요.")
+
+        print("\n\(self.customer.name)님의 커피가 준비되었습니다. 픽업대에서 가져가주세요.")
     }
 }
 
